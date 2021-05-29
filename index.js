@@ -4,6 +4,25 @@ const generatePassword = require('password-generator');
 
 const app = express();
 
+
+
+const mongoose = require('mongoose')
+
+const url = `mongodb+srv://test:test@cluster0.4bft9.mongodb.net/test?retryWrites=true&w=majority`;
+
+const connectionParams={
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useUnifiedTopology: true 
+}
+mongoose.connect(url,connectionParams)
+    .then( () => {
+        console.log('Connected to database ')
+    })
+    .catch( (err) => {
+        console.error(`Error connecting to the database. \n${err}`);
+    })
+
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
@@ -32,3 +51,5 @@ const port = process.env.PORT || 5000;
 app.listen(port);
 
 console.log(`Password generator listening on ${port}`);
+
+//mongodb+srv://test:test@cluster0.4bft9.mongodb.net/test?retryWrites=true&w=majority
