@@ -1,6 +1,6 @@
 
 const router = require("express").Router();
-const generatePassword = require('password-generator');
+
 const testDbItem = require("../models/test-model.js");
 const testDbItemData = require("../dev/test-data.js")
 
@@ -29,18 +29,6 @@ router.get("/test-data", (req, res) => {
     .catch((err) => res.send(err))
 });
 
-router.get('/api/passwords', (req, res) => {
-  const count = 5;
 
-  // Generate some passwords
-  const passwords = Array.from(Array(count).keys()).map(i =>
-    generatePassword(12, false)
-  )
-
-  // Return them as json
-  res.json(passwords);
-
-  console.log(`Sent ${count} passwords`);
-});
 
 module.exports = router;
