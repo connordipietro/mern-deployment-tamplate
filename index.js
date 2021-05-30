@@ -1,55 +1,58 @@
 const express = require('express');
+const mongoose = require('mongoose')
 const path = require('path');
-const generatePassword = require('password-generator');
+const keys = require("./config/keys");
+const bodyParser = require("body-parser");
+const http = require("http");
+
+const routes = require("./routes/index");
+
+mongoose.connect(keys.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  }
+)
+.then(() => console.log('connected to db'))
+.catch((err) => console.log(`error connecting to db ${err}`));
+
 
 const app = express();
 
+app.use(bodyParser.json());
 
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 
-const mongoose = require('mongoose')
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
-const url = `mongodb+srv://test:test@cluster0.4bft9.mongodb.net/test?retryWrites=true&w=majority`;
+app.use(routes);
 
-const connectionParams={
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true 
+if (process.env.NODE_ENV === "production") {
+  // Express will serve up production assets
+  app.use(express.static("client/build"));
+
+  // Express will serve up the index.html file
+  // if it doesn't recognize the route
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve("client", "build", "index.html"));
+  });
 }
-mongoose.connect(url,connectionParams)
-    .then( () => {
-        console.log('Connected to database ')
-    })
-    .catch( (err) => {
-        console.error(`Error connecting to the database. \n${err}`);
-    })
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'client/build')));
+const server = http.createServer(app);
 
-// Put all API endpoints under '/api'
-app.get('/api/passwords', (req, res) => {
-  const count = 5;
+const PORT = process.env.PORT || 5000;
 
-  // Generate some passwords
-  const passwords = Array.from(Array(count).keys()).map(i =>
-    generatePassword(12, false)
-  )
-
-  // Return them as json
-  res.json(passwords);
-
-  console.log(`Sent ${count} passwords`);
+server.listen(PORT, () => {
+  console.log("Node.js listening on port " + PORT);
 });
-
-// The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
-});
-
-const port = process.env.PORT || 5000;
-app.listen(port);
-
-console.log(`Password generator listening on ${port}`);
-
-//mongodb+srv://test:test@cluster0.4bft9.mongodb.net/test?retryWrites=true&w=majority
