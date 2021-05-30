@@ -13,7 +13,7 @@ function TestDataDisplay() {
 
     } else {
 
-      return <h1>Fetched Data Will Render Here</h1>
+      return <h1>Fetched Data Will Here</h1>
     }
   }
 
