@@ -4,11 +4,11 @@ import TestDataDisplay from './test-data-display'
 
 function DataContainer() {
   return (
-    <>
+    <div>
       <GenerateTestDataButton />
       <GetTestDataButton /> 
       <TestDataDisplay />
-    </>
+    </div>
   );
 };
 

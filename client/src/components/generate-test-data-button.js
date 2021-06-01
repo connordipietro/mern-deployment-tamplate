@@ -7,10 +7,10 @@ function GenerateTestDataButton() {
   }
 
   return (
-    <>
+    <div>
       <h3>Generate Test Data Once On Startup To Initiate A Database w/ Test Entries</h3>
       <button onClick ={() => handleGenerateTestDataClick()}>Generate</button>
-    </>
+    </div>
   );
 
 };

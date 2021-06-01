@@ -9,10 +9,10 @@ function GetTestDataButton() {
   }
 
   return (
-    <>
+    <div>
       <h3>Get Test Data</h3>
       <button onClick ={() => handleGetTestDataClick()}>Get Test Data</button>
-    </>
+    </div>
   );
 
 };
